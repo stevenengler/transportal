@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}List{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="/static/css/index.css"></link>
+  <script src="/static/js/htmx.js"></script>
+  <script src="/static/js/sse.js"></script>
+  <script>
+    "use strict";
+
+    // this properly cleans up the sse connection
+    // https://github.com/bigskysoftware/htmx/issues/2510#issuecomment-2084356448
+    function cleanup_sse(e) {
+        Array.from(e.children).forEach((x) => {
+            cleanup_sse(x);
+            htmx.trigger(x, 'htmx:beforeCleanupElement');
+        });
+    }
+
+    function clearSelectedTorrent(e) {
+        if (e.target !== e.currentTarget) {
+            return;
+        }
+        document.querySelectorAll(".torrent-selection-input").forEach(function (currentValue, currentIndex, listObj) {
+            currentValue.checked = false;
+        }, 0);
+        // the panel contains an htmx sse element
+        cleanup_sse(document.querySelector("#panel"));
+        document.querySelector("#panel").innerHTML = "";
+    }
+
+    function isPanelVisible() {
+        return window.getComputedStyle(document.querySelector("#panel-outer")).display !== "none";
+    }
+
+    function selectedTorrent() {
+        return document.querySelector(".torrent-selection-input:checked").value;
+    }
+
+    function updateSortDirectionQuery(e) {
+        let url = new URL(window.location);
+        let value = e.target.value;
+        url.searchParams.set('dir', value);
+        window.history.replaceState(window.history.state, "", url.toString());
+    }
+
+    function updateSearchQuery(e) {
+        let url = new URL(window.location);
+        let value = e.target.value;
+        if (value !== "") {
+            url.searchParams.set('q', value);
+        } else {
+            url.searchParams.delete('q');
+        }
+        window.history.replaceState(window.history.state, "", url.toString());
+    }
+  </script>
+{% endblock %}
+
+{% block body %}
+  <div class="header" onclick="clearSelectedTorrent(event)">
+    <div class="header-inner" onclick="clearSelectedTorrent(event)">
+      <button id="add-torrent-btn" onclick="window.location.href='/add-torrent'">Add</button>
+      <button id="delete-torrent-btn" disabled>Delete</button>
+      <button id="start-torrent-btn" hx-post="/start-torrent" hx-swap="none" hx-include="#torrent-list-form">Start</button>
+      <button id="pause-torrent-btn" hx-post="/pause-torrent" hx-swap="none" hx-include="#torrent-list-form">Pause</button>
+      <button id="verify-torrent-btn" hx-post="/verify-torrent" hx-swap="none" hx-include="#torrent-list-form">Verify</button>
+      <button id="torrent-info-btn" onclick="window.location.href='/torrent/'+selectedTorrent()">Info</button>
+      <input id="panel-checkbox" type="checkbox" hidden>
+      <label id="panel-checkbox-label" for="panel-checkbox"></label>
+    </div>
+  </div>
+  <div class="container">
+    <div class="main">
+      <div class="main-top" onclick="clearSelectedTorrent(event)">
+        <div class="main-top-inner main-section">
+          <div onclick="clearSelectedTorrent(event)">
+            <form style="display:inline;" action="/logout" method="POST">
+              <button class="button-as-link" name="logout" value="logout">Logout</button>
+            </form>
+            <a style="opacity:30%;" href="#">Stats</a>
+            <a style="opacity:30%;" href="#">Settings</a>
+          </div>
+          <div onclick="clearSelectedTorrent(event)">
+            <input id="search-query" type="search" name="q" placeholder="Filter" oninput="updateSearchQuery(event)"
+                   {% if let Some(filter) = stub.filter %} value="{{ filter }}" {% endif %}
+                   hx-trigger="input changed delay:200ms, search" hx-get="/stub/torrents" hx-target="#torrent-list-form">
+            <span>
+              Sort:
+              <select name="sort-by">
+                <option value="date-added">Date added</option>
+              </select>
+              <select id="sort-direction" name="dir" onchange="updateSortDirectionQuery(event)">
+                <option value="descend" {% if !ascending %} selected {% endif %}>Descending</option>
+                <option value="ascend" {% if ascending %} selected {% endif %}>Ascending</option>
+              </select>
+            </span>
+          </div>
+        </div>
+      </div>
+      <form id="torrent-list-form" autocomplete="on">
+        {{ stub|safe }}
+      </form>
+    </div>
+    <div id="panel-outer" class="panel"><div id="panel" class="panel-inner"><div></div>
+  </div>
+{% endblock %}

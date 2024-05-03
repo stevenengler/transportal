@@ -2,6 +2,35 @@
 name = "transportal"
 version = "0.1.0"
 edition = "2021"
-license = "AGPL-3.0-or-later"
+# htmx and the sse extension (which are bundled with the application) are
+# licensed under 0BSD
+license = "AGPL-3.0-or-later AND 0BSD"
 
 [dependencies]
+anyhow = "1.0.82"
+askama = { version = "0.12.1", default_features = false, features = ["percent-encoding"] }
+askama_axum = { version = "0.4.0", default_features = false }
+axum = { version = "0.7.5", features = ["http2"] }
+clap = { version = "4.5.4", features = ["derive"] }
+cookie = "0.18.1"
+flate2 = "1.0.30"
+futures-util = "0.3.30"
+hyper = "1.3.1"
+hyper-util = "0.1.3"
+rand = "0.8.5"
+# disable the "default-tls" feature since we don't need it and it requires "libssl-dev"
+reqwest = { version = "0.12.4", default-features = false, features = ["charset", "json"] }
+serde = { version = "1.0.198", features = ["derive"] }
+serde_json = "1.0.116"
+tokio = { version = "1.37.0", features = ["macros", "rt-multi-thread"] }
+tokio-stream = "0.1.15"
+toml = { version = "0.8.12", default-features = false, features = ["parse"] }
+tower = "0.4.13"
+tower-http = { version = "0.5.2", features = ["compression-gzip"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "0.2.153"
+
+[features]
+# allow connections to the upstream transmission server over TLS
+tls = ["reqwest/default-tls"]

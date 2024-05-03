@@ -1,0 +1,42 @@
+<ul class="torrent-list">
+  {% for torrent in torrents %}
+  {% let name = torrent.get(crate::transmission::types::TorrentGetKey::Name.borrow()).unwrap().as_str().unwrap() %}
+  {% let progress = torrent.get(crate::transmission::types::TorrentGetKey::PercentDone.borrow()).unwrap().as_f64().unwrap() * 100.0 %}
+  {% let progress2 = torrent.get(crate::transmission::types::TorrentGetKey::PercentComplete.borrow()).unwrap().as_f64().unwrap() * 100.0 %}
+  {% let total_size = torrent.get(crate::transmission::types::TorrentGetKey::TotalSize.borrow()).unwrap().as_u64().unwrap() %}
+  {% let current_size = crate::template_helpers::as_f64(total_size.clone()) * (progress2 / 100.0) %}
+  {% let total_size = total_size / 1024 / 1024 %}
+  {% let current_size = (current_size / 1024.0 / 1024.0).floor() %}
+  {% let hash = torrent.get(crate::transmission::types::TorrentGetKey::HashString.borrow()).unwrap().as_str().unwrap() %}
+  {% let labels = torrent.get(crate::transmission::types::TorrentGetKey::Labels.borrow()).unwrap().as_array().unwrap() %}
+  {% let status = torrent.get(crate::transmission::types::TorrentGetKey::Status.borrow()).unwrap().as_u64().unwrap() %}
+  {% let status = crate::transmission::types::TorrentStatus::try_from(status).unwrap() %}
+  {% let status_ui = status.ui() %}
+  <li data-hash="{{ hash }}" data-torrent-status="{{ status }}">
+    <input id="torrent-selection-{{ hash }}" class="torrent-selection-input" type="radio" name="hash" value="{{ hash }}"
+           {# close the existing sse connection before making a new one to try to help non-http/2 browsers #}
+           hx-on::before-request="cleanup_sse(event.detail.target);"
+           hx-get="/stub/torrent" hx-trigger="change" hx-target="#panel" hx-preserve>
+    <label for="torrent-selection-{{ hash }}"
+           ondblclick="window.location.href='/torrent/'+event.currentTarget.parentElement.dataset.hash">
+      <div class="main-section">
+        <div class="name-and-labels">
+          <div class="name">{{ name }}</div>
+          {% if !labels.is_empty() %}
+          <div class="labels">
+            {% for label in labels %}
+            <div class="label">{{ label.as_str().unwrap() }}</div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        <div class="status">{{ status_ui }}</div>
+        <progress value="{{ progress }}" max="100"></progress>
+        <div class="progress">
+          {{ current_size }} MiB of {{ total_size }} MiB ({{ progress|fmt("{:.1}") }}%)
+        </div>
+      </div>
+    </label>
+  </li>
+  {% endfor %}
+</ul>

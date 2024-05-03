@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block head %}
+  {% if secure_cookie_attribute %}
+  <script>
+    "use strict";
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!window.isSecureContext) {
+            document.getElementById("insecure-context-notice").style.display = 'initial'; 
+        }
+    }, false);
+  </script>
+  {% endif %}
+  <style>
+    body {
+      position: fixed;
+	  top: 0px;
+	  bottom: 0px;
+	  left: 0px;
+	  right: 0px;
+
+      display: flex;
+	  flex-direction: column;
+      justify-content: center;
+	  align-items: center;
+    }
+    .login {
+      border: 2px solid #aaa;
+      border-radius: 0.3em;
+      max-width: 30em;
+    }
+    .login-inner {
+      margin: 1em;
+    }
+    .login h1 {
+      text-align: center;
+    }
+    .login #insecure-context-notice {
+      color: #750000;
+    }
+    .login .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
+      row-gap: 0.2em;
+      column-gap: 1em;
+    }
+    .login label {
+      width: 4.5em;
+    }
+    .login input[type=text], .login input[type=password] {
+      flex-grow: 1;
+      border: 1px solid #b0b0b0;
+      border-radius: 2px;
+      transition: 0.2s;
+      outline-width: 0;
+      padding: 4px 7px;
+      font-size: 0.9em;
+    }
+    .login input[type=text]:hover, .login input[type=password]:hover {
+      border-color: #61bf69;
+    }
+    .login input[type=text]:focus, .login input[type=password]:focus {
+      border-color: #61bf69;
+      box-shadow: 0px 0px 3px #61bf69;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <div class="login">
+    <div class="login-inner">
+      <p id="insecure-context-notice" style="display:none;">
+        The server is set to use the "Secure" cookie flag, but you are accessing the site over an
+        insecure connection. The login process will likely fail.
+      </p>
+      <form action="/login" method="post" autocomplete="off">
+        <div class="row">
+          <label for="username">Username</label>
+          <input id="username" type="text" name="username" autocomplete="off" required>
+        </div>
+        <div class="row">
+          <label for="password">Password</label>
+          <input id="password" type="password" name="password" autocomplete="off" required>
+        </div>
+        <input type="submit" value="Login">
+      </form>
+    </div>
+  </div>
+{% endblock %}

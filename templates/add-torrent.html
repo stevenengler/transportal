@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Add Torrent{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+  <form action="/add-torrent" method="post" autocomplete="off">
+    <label for="magnet">Magnet link</label>
+    <br>
+    <input id="magnet" style="width:90%" type="text" name="magnet" placeholder="magnet:?"
+           autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off" required
+           oninput="document.getElementById('magnet-show').innerText = event.target.value">
+    <p id="magnet-show" style="word-break:break-all;"></p>
+    <p>
+      <label for="paused">Pause?</label>
+      <input id="paused" type="checkbox" name="paused">
+    </p>
+    <input type="submit" value="Add Torrent">
+  </form>
+{% endblock %}

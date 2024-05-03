@@ -1,0 +1,19 @@
+{% let name = details.get(crate::transmission::types::TorrentGetKey::Name.borrow()).unwrap().as_str().unwrap() %}
+{% let date_created = details.get(crate::transmission::types::TorrentGetKey::DateCreated.borrow()).unwrap().as_u64().unwrap() %}
+{% let hash = details.get(crate::transmission::types::TorrentGetKey::HashString.borrow()).unwrap().as_str().unwrap() %}
+{% let status = details.get(crate::transmission::types::TorrentGetKey::Status.borrow()).unwrap().as_u64().unwrap() %}
+{% let status = crate::transmission::types::TorrentStatus::try_from(status).unwrap() %}
+{% let status_ui = status.ui() %}
+<p>{{name}}</p>
+<p>{{hash}}</p>
+<p>Date created: {{date_created}}</p>
+<p>Status: {{status_ui}}</p>
+
+<table style="border-spacing:1em 0.5em;">
+  {% for (key, val) in details %}
+  <tr>
+    <td>{{ key|fmt("{:?}") }}</td>
+    <td>{{ val|fmt("{}") }}</td>
+  </tr>
+  {% endfor %}
+</table>

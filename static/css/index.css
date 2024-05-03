@@ -1,0 +1,277 @@
+@charset "utf-8";
+
+/* main page layout */
+
+body {
+  margin: 0;
+}
+
+body > .header {
+  position: sticky;
+  z-index: 1;
+  overflow-x: auto;
+  top: 0;
+  width: 100%;
+  height: 3em;
+  background-color: #eaeaea;
+  box-sizing: border-box; /* must use this to align panel */
+  display: flex; /* to vertically center child div */
+}
+
+body > .header > .header-inner {
+  margin: 0.5em;
+  display: flex;
+  gap: 0.2em;
+  align-items: center;
+  width: 100%;
+}
+
+body > .container {
+  display: flex;
+  position: relative;
+}
+
+body > .container > .main {
+  flex-grow: 1;
+  flex-basis: 0;
+  max-width: 50%;
+}
+
+body > .container > .panel {
+  box-sizing: border-box; /* must use this to align panel */
+  border-left: 1px solid #d0d0d0;
+  height: calc(100vh - 3em);
+  flex-grow: 1;
+  flex-basis: 0;
+  align-self: flex-start;
+  overflow: auto;
+  position: sticky;
+  top: 3em;
+}
+
+body > .container > .panel > .panel-inner {
+  margin: 1em;
+}
+
+/* panel open/close button */
+
+#panel-checkbox-label::before {
+  font-size: 1.2em;
+  content: "↦";
+  margin: 0.3em;
+}
+
+:root:has(#panel-checkbox:checked)
+#panel-checkbox-label::before {
+  content: "↤";
+}
+
+:root:has(#panel-checkbox:checked)
+body > .container > .panel {
+  display: none;
+}
+
+:root:has(#panel-checkbox:checked)
+body > .container > .main {
+  max-width: 100%;
+}
+
+@media only screen and (max-width: 400pt) {
+  #panel-checkbox-label {
+    display: none;
+  }
+
+  body > .container > .panel {
+    display: none;
+  }
+
+  body > .container > .main {
+    max-width: 100%;
+  }
+}
+
+/* header */
+
+.header button {
+  font-size: 0.9em;
+  height: 2em;
+  user-select: none;
+}
+
+.header #panel-checkbox-label {
+  margin-left: auto;
+}
+
+/* header buttons */
+
+#start-torrent-btn, #pause-torrent-btn, #verify-torrent-btn, #torrent-info-btn {
+  opacity: 30%;
+  pointer-events: none;
+}
+
+:root:has(ul.torrent-list li[data-torrent-status="stopped"] .torrent-selection-input:checked) #delete-torrent-btn,
+:root:has(ul.torrent-list li[data-torrent-status="stopped"] .torrent-selection-input:checked) #start-torrent-btn,
+:root:has(ul.torrent-list li:not([data-torrent-status="stopped"]) .torrent-selection-input:checked) #pause-torrent-btn,
+:root:has(ul.torrent-list li .torrent-selection-input:checked) #verify-torrent-btn,
+:root:has(ul.torrent-list li .torrent-selection-input:checked) #torrent-info-btn {
+  opacity: 100%;
+  pointer-events: auto;
+}
+
+/* a section of the main content */
+
+.main-section {
+  margin: 0.5em 0.8em;
+}
+
+/* top section of the main content */
+
+.main > .main-top {
+  /* We want this element to take up the entire space so that its `onclick` handler will run when
+   * clicking anywhere on the element, but due to margin collapse it won't cover the margins of any
+   * inner elements. To work around this we give some padding to prevent the margin collapse.
+   * https://www.complexspiral.com/publications/uncollapsing-margins/ */
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.main > .main-top > .main-top-inner > * {
+  margin: 0.3em;
+  display: flex;
+  justify-content: center;
+  column-gap: 1em;
+  row-gap: 0.2em;
+  flex-wrap: wrap;
+}
+
+.main > .main-top #search-query {
+  min-width: 5em;
+}
+
+:root:has(#sort-direction option[value="ascend"]:checked) ul.torrent-list {
+  flex-direction: column-reverse;
+}
+
+:root:has(#sort-direction option[value="ascend"]:checked) ul.torrent-list li:nth-last-child(odd),
+:root:has(#sort-direction option[value="ascend"]:not(:checked)) ul.torrent-list li:nth-child(odd) {
+  background: #f5f5f5;
+}
+
+/* torrent list */
+
+ul.torrent-list {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul.torrent-list > li {
+  display: flex;
+  flex-direction: column;
+}
+
+ul.torrent-list > li[data-torrent-status="stopped"] {
+  color: grey;
+}
+
+ul.torrent-list .torrent-selection-input {
+  /* set 0 size instead of display:none so that arrow keys can be used to cycle through
+   * entries */
+  width: 0;
+  height: 0;
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+ul.torrent-list .torrent-selection-input ~ label {
+  display: block;
+  user-select: none;
+  /* for iOS: https://stackoverflow.com/a/11885330 */
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+ul.torrent-list .torrent-selection-input:checked ~ label {
+  background-color: #e8e8ff;
+}
+
+ul.torrent-list .name-and-labels {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.6em;
+}
+
+ul.torrent-list .name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+
+ul.torrent-list .labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+  white-space: nowrap;
+  font-size: 0.8em;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+
+ul.torrent-list .labels .label {
+  background-color: rgba(25, 25, 25, 0.05);
+  padding: 0.15em 0.3em;
+  border-radius: 5px;
+}
+
+ul.torrent-list li:not([data-torrent-status="stopped"]) .labels .label {
+  color: #202020;
+}
+
+ul.torrent-list .status {
+  font-size: 0.8em;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+
+ul.torrent-list .progress {
+  font-size: 0.8em;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+
+ul.torrent-list progress {
+  accent-color: grey;
+  width: 100%;
+  display: block;
+  /* the progress bar style has implicit padding that we don't want */
+  margin-top: -0.1em;
+  margin-bottom: -0.1em;
+}
+
+ul.torrent-list li[data-torrent-status="verify-queued"] progress {
+  accent-color: #fad7a0;
+}
+
+ul.torrent-list li[data-torrent-status="verifying"] progress {
+  accent-color: #f39c12;
+}
+
+ul.torrent-list li[data-torrent-status="download-queued"] progress {
+  accent-color: #a9cce3;
+}
+
+ul.torrent-list li[data-torrent-status="downloading"] progress {
+  accent-color: #2980b9;
+}
+
+ul.torrent-list li[data-torrent-status="seed-queued"] progress {
+  accent-color: #a9dfbf;
+}
+
+ul.torrent-list li[data-torrent-status="seeding"] progress {
+  accent-color: #27ae60;
+}

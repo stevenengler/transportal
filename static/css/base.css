@@ -1,0 +1,23 @@
+@charset "utf-8";
+
+:root {
+  font-family: Lato, Arial, Helvetica, "Liberation Sans", sans-serif;
+  /* some comments online use "unset", but this doesn't seem to work properly on iOS */
+  -webkit-text-size-adjust: 100%;
+}
+
+a {
+  color: #0000A0;
+  text-decoration: none;
+}
+
+.button-as-link {
+  border: none !important;
+  background: none !important;
+  padding: 0 !important;
+  color: #0000A0;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+}

@@ -1,0 +1,1 @@
+../../vendored/htmx-extensions/src/sse/sse.js

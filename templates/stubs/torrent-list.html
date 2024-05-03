@@ -1,0 +1,4 @@
+<div hx-ext="sse" sse-swap="list"
+     sse-connect="/sse/torrents{% if let Some(filter) = filter %}?q={{filter|urlencode_strict}}{% endif %}">
+  {{ partial|safe }}
+</div>

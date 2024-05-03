@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Torrent {{ stub.hash[..8] }}{% endblock %}
+
+{% block head %}
+  <script src="/static/js/htmx.js"></script>
+  <script src="/static/js/sse.js"></script>
+{% endblock %}
+
+{% block body %}
+  {{ stub|safe }}
+{% endblock %}
