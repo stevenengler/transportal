@@ -1,0 +1,6 @@
+[submodule "vendored/htmx"]
+	path = vendored/htmx
+	url = https://github.com/bigskysoftware/htmx.git
+[submodule "vendored/htmx-extensions"]
+	path = vendored/htmx-extensions
+	url = https://github.com/bigskysoftware/htmx-extensions.git
