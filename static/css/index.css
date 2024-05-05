@@ -157,6 +157,14 @@ body > .container > .main {
   background: #f5f5f5;
 }
 
+/* bottom section of the main content */
+
+.torrent-count {
+  color: grey;
+  font-size: 0.8em;
+  text-align: center;
+}
+
 /* torrent list */
 
 ul.torrent-list {

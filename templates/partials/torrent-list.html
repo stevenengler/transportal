@@ -40,3 +40,7 @@
   </li>
   {% endfor %}
 </ul>
+<div class="torrent-count main-section">
+  {# we could use css counters to show the torrent count, but there wouldn't be any way to optionally add the "s" #}
+  {{ torrents.len() }} torrent {%- if torrents.len() != 1 -%} s {%- endif %}
+</div>
