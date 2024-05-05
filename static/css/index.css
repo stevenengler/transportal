@@ -16,6 +16,8 @@ body > .header {
   background-color: #eaeaea;
   box-sizing: border-box; /* must use this to align panel */
   display: flex; /* to vertically center child div */
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
 }
 
 body > .header > .header-inner {
@@ -35,6 +37,7 @@ body > .container > .main {
   flex-grow: 1;
   flex-basis: 0;
   max-width: 50%;
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 body > .container > .panel {
@@ -47,6 +50,7 @@ body > .container > .panel {
   overflow: auto;
   position: sticky;
   top: 3em;
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 body > .container > .panel > .panel-inner {
@@ -76,6 +80,11 @@ body > .container > .main {
   max-width: 100%;
 }
 
+:root:has(#panel-checkbox:checked)
+.main-section {
+  padding-right: env(safe-area-inset-right, 0);
+}
+
 @media only screen and (max-width: 400pt) {
   #panel-checkbox-label {
     display: none;
@@ -87,6 +96,10 @@ body > .container > .main {
 
   body > .container > .main {
     max-width: 100%;
+  }
+
+  .main-section {
+    padding-right: env(safe-area-inset-right, 0);
   }
 }
 
@@ -122,6 +135,7 @@ body > .container > .main {
 
 .main-section {
   margin: 0.5em 0.8em;
+  padding-left: env(safe-area-inset-left, 0);
 }
 
 /* top section of the main content */

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     {# use "maximum-scale=1" to prevent iOS from automatically zooming in when you select a text
        input; on safari the user can still zoom manually, but not on 3rd party browsers #}
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, {% block viewport_extra %}{% endblock %}">
     <title>{% block title %}{% endblock %} - transportal</title>
     <link rel="stylesheet" type="text/css" href="/static/css/base.css"></link>
     {% block head %}{% endblock %}
