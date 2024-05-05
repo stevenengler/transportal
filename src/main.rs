@@ -51,6 +51,7 @@ async fn main() -> anyhow::Result<()> {
     let bind_unix_perms = config.connection.bind_unix_perms;
     let shared_state = Arc::new(AppState::new(config));
 
+    #[rustfmt::skip]
     let app = Router::new()
         .route("/", get(index_get))
         .route("/login", get(login_get))
@@ -66,6 +67,7 @@ async fn main() -> anyhow::Result<()> {
         .route("/stub/torrents", get(stub_torrents_get))
         .route("/sse/torrent", get(sse_torrent_get))
         .route("/sse/torrents", get(sse_torrents_get))
+        .route("/static/app/manifest.json", json!("static/app/manifest.json"))
         .route("/static/css/base.css", css!("static/css/base.css"))
         .route("/static/css/index.css", css!("static/css/index.css"))
         .route("/static/js/htmx.js", js!("static/js/htmx.js"))

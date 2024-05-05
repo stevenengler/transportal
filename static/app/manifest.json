@@ -1,0 +1,14 @@
+{
+  "name": "transportal",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#eaeaea",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/prog-web-apps-need-an-icon-listed-but-it-does-not-seem-to-need-to-exist.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

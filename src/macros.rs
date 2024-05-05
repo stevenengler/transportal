@@ -10,6 +10,12 @@ macro_rules! js {
     };
 }
 
+macro_rules! json {
+    ($path:literal) => {
+        static_content!($path, "application/json")
+    };
+}
+
 macro_rules! static_content {
     ($path:literal, $mime:literal) => {{
         const DATA: &[u8] = ::std::include_bytes!(::std::concat!(

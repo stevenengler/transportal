@@ -6,6 +6,7 @@
        input; on safari the user can still zoom manually, but not on 3rd party browsers #}
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, {% block viewport_extra %}{% endblock %}">
     <title>{% block title %}{% endblock %} - transportal</title>
+    <link rel="manifest" href="/static/app/manifest.json"></link>
     <link rel="stylesheet" type="text/css" href="/static/css/base.css"></link>
     {% block head %}{% endblock %}
   </head>
