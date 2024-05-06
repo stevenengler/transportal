@@ -4,10 +4,16 @@
   font-family: Lato, Arial, Helvetica, "Liberation Sans", sans-serif;
   /* some comments online use "unset", but this doesn't seem to work properly on iOS */
   -webkit-text-size-adjust: 100%;
+  color-scheme: light dark;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 
 a {
-  color: #0000A0;
+  color: var(--color-link);
   text-decoration: none;
 }
 
@@ -15,9 +21,53 @@ a {
   border: none !important;
   background: none !important;
   padding: 0 !important;
-  color: #0000A0;
+  color: var(--color-link);
   text-decoration: none;
   cursor: pointer;
   font-size: inherit;
   font-family: inherit;
+}
+
+:root {
+  --color-background: #ffffff;
+  --color-text: #000000;
+  --color-text-unimportant: grey;
+  --color-link: #0000a0;
+  --color-alternating: #00000009;
+  --color-header: #eaeaea;
+  --color-selected: #e8e8ff;
+  --color-border: #d0d0d0;
+  --color-label: #1919190d;
+  --color-label-text: #202020;
+
+  --color-accent-default: grey;
+  --color-accent-verify-queued: #fad7a0;
+  --color-accent-verifying: #f39c12;
+  --color-accent-download-queued: #a9cce3;
+  --color-accent-downloading: #2980b9;
+  --color-accent-seed-queued: #a9dfbf;
+  --color-accent-seeding: #27ae60;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #151515;
+    --color-text: #dedede;
+    --color-text-unimportant: #a5a5a5;
+    --color-link: #9999df;
+    --color-alternating: #ffffff09;
+    --color-header: #232323;
+    --color-selected: #2d2d42;
+    --color-border: #303030;
+    --color-label: #d6d6d60d;
+    --color-label-text: #c0c0c0;
+
+    --color-accent-default: grey;
+    --color-accent-verify-queued: #a06608;
+    --color-accent-verifying: #f39c12;
+    --color-accent-download-queued: #295d7f;
+    --color-accent-downloading: #2980b9;
+    --color-accent-seed-queued: #2d7b4c;
+    --color-accent-seeding: #27ae60;
+  }
 }
