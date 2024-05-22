@@ -13,9 +13,9 @@
 
     // this properly cleans up the sse connection
     // https://github.com/bigskysoftware/htmx/issues/2510#issuecomment-2084356448
-    function cleanup_sse(e) {
+    function cleanupSse(e) {
         Array.from(e.children).forEach((x) => {
-            cleanup_sse(x);
+            cleanupSse(x);
             htmx.trigger(x, 'htmx:beforeCleanupElement');
         });
     }
@@ -28,7 +28,7 @@
             currentValue.checked = false;
         }, 0);
         // the panel contains an htmx sse element
-        cleanup_sse(document.querySelector("#panel"));
+        cleanupSse(document.querySelector("#panel"));
         document.querySelector("#panel").innerHTML = "";
     }
 

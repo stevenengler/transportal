@@ -15,7 +15,7 @@
   <li data-hash="{{ hash }}" data-torrent-status="{{ status }}">
     <input id="torrent-selection-{{ hash }}" class="torrent-selection-input" type="radio" name="hash" value="{{ hash }}"
            {# close the existing sse connection before making a new one to try to help non-http/2 browsers #}
-           hx-on::before-request="cleanup_sse(event.detail.target);"
+           hx-on::before-request="cleanupSse(event.detail.target);"
            hx-get="/stub/torrent" hx-trigger="change" hx-target="#panel" hx-preserve>
     <label for="torrent-selection-{{ hash }}"
            ondblclick="window.location.href='/torrent/'+event.currentTarget.parentElement.dataset.hash">
