@@ -3,10 +3,13 @@
   {% let name = torrent.get(crate::transmission::types::TorrentGetKey::Name.borrow()).unwrap().as_str().unwrap() %}
   {% let progress = torrent.get(crate::transmission::types::TorrentGetKey::PercentDone.borrow()).unwrap().as_f64().unwrap() * 100.0 %}
   {% let progress2 = torrent.get(crate::transmission::types::TorrentGetKey::PercentComplete.borrow()).unwrap().as_f64().unwrap() * 100.0 %}
-  {% let total_size = torrent.get(crate::transmission::types::TorrentGetKey::TotalSize.borrow()).unwrap().as_u64().unwrap() %}
-  {% let current_size = crate::template_helpers::as_f64(total_size.clone()) * (progress2 / 100.0) %}
-  {% let total_size = total_size / 1024 / 1024 %}
-  {% let current_size = (current_size / 1024.0 / 1024.0).floor() %}
+  {% let left_until_done = torrent.get(crate::transmission::types::TorrentGetKey::LeftUntilDone.borrow()).unwrap().as_u64().unwrap() %}
+  {% let size_when_done = torrent.get(crate::transmission::types::TorrentGetKey::SizeWhenDone.borrow()).unwrap().as_u64().unwrap() %}
+  {% let left_until_done = left_until_done / 1024 / 1024 %}
+  {% let size_when_done = size_when_done / 1024 / 1024 %}
+  {% let eta = torrent.get(crate::transmission::types::TorrentGetKey::Eta.borrow()) %}
+  {% let finished = torrent.get(crate::transmission::types::TorrentGetKey::IsFinished.borrow()).unwrap().as_bool().unwrap() %}
+  {% let wanted = torrent.get(crate::transmission::types::TorrentGetKey::Wanted.borrow()) %}
   {% let hash = torrent.get(crate::transmission::types::TorrentGetKey::HashString.borrow()).unwrap().as_str().unwrap() %}
   {% let labels = torrent.get(crate::transmission::types::TorrentGetKey::Labels.borrow()).unwrap().as_array().unwrap() %}
   {% let status = torrent.get(crate::transmission::types::TorrentGetKey::Status.borrow()).unwrap().as_u64().unwrap() %}
@@ -30,10 +33,30 @@
           </div>
           {% endif %}
         </div>
-        <div class="status">{{ status_ui }}</div>
+        <div class="status">{{ status_ui }} {% if finished %} (seeding complete) {% endif %}</div>
         <progress value="{{ progress }}" max="100"></progress>
         <div class="progress">
-          {{ current_size }} MiB of {{ total_size }} MiB ({{ progress|fmt("{:.1}") }}%)
+          {% if left_until_done != 0 %}
+          {{ size_when_done - left_until_done }} MiB of
+          {% endif %}
+          {{ size_when_done }} MiB ({{ progress|fmt("{:.1}") }}%)
+          {% if let Some(eta) = eta %}
+          {% let eta = eta.as_i64().unwrap() %}
+          {% if eta > 0 %}
+          — {{ eta }} seconds remaining
+          {% endif %}
+          {% endif %}
+          {% if let Some(wanted) = wanted %}
+          {% let wanted = wanted.as_array().unwrap() %}
+          {% let wanted_total = wanted.len() %}
+          {% let wanted = wanted.iter().map(crate::template_helpers::json_num_to_bool)
+                                       .map(Option::unwrap)
+                                       .filter(crate::template_helpers::identity_copy)
+                                       .count() %}
+          {% if wanted != wanted_total %}
+          — selected {{ wanted }}/{{ wanted_total }} file {%- if wanted != 1 -%} s {%- endif %}
+          {% endif %}
+          {% endif %}
         </div>
       </div>
     </label>
