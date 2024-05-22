@@ -262,8 +262,13 @@ async fn login_post(
         .await;
 
     if matches!(resp, Err(StatusCode::UNAUTHORIZED)) {
-        // could be wrong username/password or the server connecting from a non-whitelisted IP
+        // could be wrong username/password
         return Ok((StatusCode::UNAUTHORIZED, None, "Not authorized"));
+    }
+
+    if matches!(resp, Err(StatusCode::FORBIDDEN)) {
+        // could be the server connecting from a non-whitelisted IP
+        return Ok((StatusCode::FORBIDDEN, None, "Forbidden"));
     }
 
     // make sure to raise any other errors

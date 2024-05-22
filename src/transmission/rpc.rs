@@ -32,16 +32,24 @@ impl TransmissionRpc {
     ) -> Result<transmission::types::Response<T>, StatusCode> {
         let resp = self.csrf_request(rpc, msg).await?;
 
-        if resp.status() == reqwest::StatusCode::UNAUTHORIZED {
-            // could be wrong username/password or connecting from a non-whitelisted IP
-            return Err(StatusCode::UNAUTHORIZED);
-        } else if !resp.status().is_success() {
-            println!(
-                "Transmission returned {}: {}",
-                resp.status(),
-                resp.text().await.unwrap_or(String::new()),
-            );
-            return Err(StatusCode::BAD_GATEWAY);
+        match resp.status() {
+            x @ reqwest::StatusCode::UNAUTHORIZED => {
+                // could be wrong username/password
+                return Err(x);
+            }
+            x @ reqwest::StatusCode::FORBIDDEN => {
+                // could be connecting from a non-whitelisted IP
+                return Err(x);
+            }
+            x if !x.is_success() => {
+                println!(
+                    "Transmission returned {}: {}",
+                    resp.status(),
+                    resp.text().await.unwrap_or(String::new()),
+                );
+                return Err(StatusCode::BAD_GATEWAY);
+            }
+            _ => {}
         }
 
         // transmission unfortunately uses success http statuses for unsucessful rpc requests
