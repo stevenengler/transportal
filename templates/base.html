@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     {# use "maximum-scale=1" to prevent iOS from automatically zooming in when you select a text
        input; on safari the user can still zoom manually, but not on 3rd party browsers #}
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, {% block viewport_extra %}{% endblock %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1{% block viewport_extra %}{% endblock %}">
     {# theme color should match with static/app/manifest.json and with the header bar color in css #}
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eaeaea">
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#232323">
