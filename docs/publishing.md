@@ -31,10 +31,17 @@
 3. Publish the crate.
 
     ```bash
-    # make sure there are no untracked or changed files
+    # remove symlinks to vendored files
+    cp --remove-destination "$(dirname static/js/htmx.js)/$(readlink static/js/htmx.js)" static/js/htmx.js
+    cp --remove-destination "$(dirname static/js/sse.js)/$(readlink static/js/sse.js)" static/js/sse.js
+
+    # remove vendored repositories
+    rm -r vendored/
+
+    # make sure there are no unexpected untracked or changed files
     git status
 
     # publish
-    cargo publish --dry-run
-    cargo publish
+    cargo publish --allow-dirty --dry-run
+    cargo publish --allow-dirty
     ```
