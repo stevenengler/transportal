@@ -5,6 +5,10 @@ edition = "2021"
 # htmx and the sse extension (which are bundled with the application) are
 # licensed under 0BSD
 license = "AGPL-3.0-or-later AND 0BSD"
+repository = "https://github.com/stevenengler/transportal"
+description = "A responsive web interface and server for Transmission."
+categories = ["command-line-utilities"]
+keywords = ["transmission", "torrent", "bittorrent", "web"]
 
 [dependencies]
 anyhow = "1.0.82"
